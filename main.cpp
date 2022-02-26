@@ -5,42 +5,51 @@
 
 int main() {
     int x = 1;
-    int iEingabe = 1;
-    char EnterEingabe;
-    std::string Puffer;
-    unsigned int iGeschriebeneZiffern = 0;
-    int iProcess = 1;
-    std::string strNeueEingabe;
+    std::string CharCount;
+    unsigned int WriteChar = 0;
+    bool NewInput = true;
+    bool InputCorrect = false;
+    std::string NewRound;
 
-    while(iProcess == 1) {
+    while(NewInput) {
+        int UserInput;
+        std::cout << "Bis wieviel soll gezählt werden?\nDeine Eingabe: ";
+        std::cin >> UserInput;
+        if(std::cin.fail()) {
+            InputCorrect = false;
+        }
+        else {
+            InputCorrect = true;
+        }
 
-        std::cout << "Bis wieviel soll gez\204hlt werden?\nDeine Eingabe: ";
-        std::cin >> iEingabe;
-        std::cout << "Danke für die Eingabe. Ich z\204hle bis" << iEingabe << std::endl;
         auto iTimestampStart = std::chrono::system_clock::now();
 
-        while (x <= iEingabe) {
+        while (x <= UserInput && InputCorrect)  {
             std::cout << "Ich bin bei " << x << std::endl;
-            Puffer = std::to_string(x);
-            iGeschriebeneZiffern += Puffer.size();
+            CharCount = std::to_string(x);
+            WriteChar += CharCount.size();
             x++;
         }
 
-        auto iTimestampStop = std::chrono::system_clock::now();
-        std::chrono::duration<double> elapsed_seconds = iTimestampStop - iTimestampStart;
-        std::time_t end_time = std::chrono::system_clock::to_time_t(iTimestampStop);
+        if(x >= UserInput && InputCorrect) {
+            auto iTimestampStop = std::chrono::system_clock::now();
+            std::chrono::duration<double> elapsed_seconds = iTimestampStop - iTimestampStart;
+            std::time_t end_time = std::chrono::system_clock::to_time_t(iTimestampStop);
 
-        std::cout << "Es wurde bis " << iEingabe << " gez\204hlt.\nDabei wurden " << iGeschriebeneZiffern
-                  << " Ziffern geschrieben!" << std::endl;
-        std::cout << "Der Vorgang hat insgesamt: " << elapsed_seconds.count() << " Sekunden ben\224tigt!" << std::endl;
-        std::cout << "Neue Eingabe? y/n:";
-        std::cin >> strNeueEingabe;
-        if(strNeueEingabe == "y")
-        {
-            iProcess = 1;
+            std::cout << "Es wurde bis " << UserInput << " gezählt.\nDabei wurden " << WriteChar
+                      << " Ziffern geschrieben!" << std::endl;
+            std::cout << "Der Vorgang hat insgesamt: " << elapsed_seconds.count() << " Sekunden benötigt!" << std::endl;
+            std::cout << "Neue Eingabe? y/n:";
+            std::cin >> NewRound;
+            if (NewRound == "y") {
+                NewInput = true;
+            } else {
+                NewInput = false;
+            }
         }
         else {
-            iProcess = 0;
+            std::cout << "Ungültige Eingabe. Beende das Programm" << std::endl;
+            return(EXIT_SUCCESS);
         }
     }
     return 0;
